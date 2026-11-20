@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="arcade"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LAUNDRYX – Laundry, Without the Wait.</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eaf2fc;--bg2:#fff;--tx:#0b1530;--mu:#4b5b7a;--glass:rgba(255,255,255,.62);--bd:rgba(30,50,100,.14);--cy:#0891b2;--vi:#7c3aed;--ok:#059669;--wa:#b45309;--er:#e11d48;--on:#fff;--g1:rgba(255,255,255,.6);--g2:rgba(255,255,255,.12);--rim:rgba(255,255,255,.95);--sh:0 10px 30px rgba(40,70,140,.14);color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root[data-theme=dark]{--bg:#070b16;--bg2:#0d1426;--tx:#f2f6ff;--mu:#9aa8c4;--glass:rgba(255,255,255,.06);--bd:rgba(255,255,255,.14);--cy:#22d3ee;--vi:#8b5cf6;--ok:#34d399;--wa:#fbbf24;--er:#fb7185;--on:#06101f;--g1:rgba(255,255,255,.15);--g2:rgba(255,255,255,.03);--rim:rgba(255,255,255,.3);--sh:0 10px 40px rgba(0,0,0,.35);color-scheme:dark}
+body::before{background:#a5b4fc}body::after{background:#67e8f9}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%}
+body{font:15px/1.5 Inter,system-ui,sans-serif;color:var(--tx);background:var(--bg);overflow-x:hidden}
+body::before,body::after{content:"";position:fixed;width:50vmax;height:50vmax;border-radius:50%;filter:blur(80px);opacity:.6;z-index:-1;animation:fl 18s ease-in-out infinite alternate}
+body::before{background:var(--vi);top:-20vmax;left:-10vmax}body::after{background:var(--cy);bottom:-25vmax;right:-15vmax;animation-delay:-8s}
+@keyframes fl{to{transform:translate(6vmax,4vmax)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+h1,h2,h3{margin:0;letter-spacing:-.03em;line-height:1.1}h1{font-size:clamp(2.4rem,7vw,4.6rem);font-weight:800}h2{font-size:1.6rem}h3{font-size:1.05rem}
+p{margin:.4em 0;color:var(--mu)}a{color:inherit}
+.g{position:relative;background:linear-gradient(135deg,var(--g1),var(--g2));border:1px solid var(--rim);border-radius:24px;backdrop-filter:blur(30px) saturate(190%) brightness(1.04);-webkit-backdrop-filter:blur(30px) saturate(190%) brightness(1.04);box-shadow:var(--sh),inset 0 2px 1px var(--rim),inset 0 -1px 1px rgba(255,255,255,.12),inset 0 0 30px rgba(255,255,255,.1);padding:18px}
+.g::before{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(155deg,rgba(255,255,255,.4),rgba(255,255,255,0) 38%);opacity:.45;pointer-events:none}
+.btn{font:600 14px Inter;border:1px solid var(--rim);background:linear-gradient(135deg,var(--g1),var(--g2));backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:inset 0 1px 1px var(--rim);color:var(--tx);padding:10px 16px;border-radius:12px;cursor:pointer;transition:.2s}
+.btn:hover:not(:disabled){transform:translateY(-2px)}.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.p{background:linear-gradient(135deg,var(--cy),var(--vi));border:0;color:var(--on)}.btn.d{color:var(--er)}.btn.s{padding:6px 10px;font-size:13px}
+:focus-visible{outline:2px solid var(--cy);outline-offset:2px}
+.wrap{max-width:1100px;margin:auto;padding:20px}.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}.sp{justify-content:space-between}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+.logo{font-weight:800;letter-spacing:.04em;display:flex;align-items:center;gap:8px;font-size:18px}
+.logo i{width:26px;height:26px;border-radius:50%;border:3px solid var(--cy);border-right-color:var(--vi);display:inline-block}
+.badge{font-size:12px;font-weight:600;padding:3px 10px;border-radius:99px;border:1px solid currentColor;white-space:nowrap}
+.confirmed,.available{color:var(--cy)}.ready,.reserved{color:var(--wa)}.washing,.inuse{color:var(--vi)}.completed{color:var(--ok)}.cancelled,.maintenance{color:var(--er)}
+.stat b{font-size:2rem;display:block}.stat span{color:var(--mu);font-size:13px}
+nav.top{display:flex;gap:6px;overflow-x:auto;padding:6px;margin-bottom:16px}
+nav.top button{white-space:nowrap}nav.top .on{background:var(--cy);color:var(--on);border-color:transparent}
+input,select{font:inherit;color:var(--tx);background:var(--glass);border:1px solid var(--bd);border-radius:10px;padding:9px 12px;min-width:0}
+select option{color:#000}label{display:block;font-size:13px;color:var(--mu);margin:8px 0 4px}
+.slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.slot.on{background:var(--cy);color:var(--on)}.slot.x{opacity:.35;text-decoration:line-through}
+.mc.on{outline:2px solid var(--cy)}.mc{cursor:pointer}
+.bar{height:8px;border-radius:9px;background:var(--bd);overflow:hidden}.bar>div{height:100%;background:linear-gradient(90deg,var(--cy),var(--vi));transition:width .6s}
+.tl{display:flex;gap:6px;margin:12px 0}.tl div{flex:1;text-align:center;font-size:12px;color:var(--mu);border-top:3px solid var(--bd);padding-top:6px}.tl .d{border-color:var(--ok);color:var(--tx)}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.55);display:grid;place-items:center;z-index:9;padding:16px;animation:in .2s}
+@keyframes in{from{opacity:0;transform:scale(.97)}}
+.toast{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:10;max-width:90vw}
+.tick{width:72px;height:72px;border-radius:50%;border:4px solid var(--ok);display:grid;place-items:center;font-size:36px;color:var(--ok);margin:auto;animation:in .5s}
+.tw{overflow-x:auto}table{width:100%;border-collapse:collapse}td,th{padding:8px;text-align:left;border-bottom:1px solid var(--bd);font-size:14px}
+.demo{font-size:12px;color:var(--wa)}
+/* ARCADE theme (inspired by the uploaded site's neon pixel look) */
+:root[data-theme=arcade]{--bg:#1a0630;--bg2:#26093f;--tx:#f6eeff;--mu:#c9b3e8;--glass:rgba(40,10,70,.7);--bd:rgba(255,79,216,.35);--cy:#2dffc4;--vi:#b86bff;--ok:#8dff6b;--wa:#ffd23f;--er:#ff5c7a;--on:#06130f;--g1:rgba(32,8,58,.9);--g2:rgba(32,8,58,.9);--rim:#ff4fd8;--sh:0 0 18px rgba(255,79,216,.35);color-scheme:dark}
+[data-theme=arcade] body{font-family:'Space Mono',ui-monospace,monospace;background-color:#1a0630;background-image:linear-gradient(rgba(255,79,216,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(255,79,216,.07) 1px,transparent 1px);background-size:32px 32px}
+[data-theme=arcade] body::before{width:14px;height:14px;border-radius:0;filter:none;opacity:1;background:#ff4fd8;top:14vh;left:90vw;inset:auto;top:14vh;left:90vw;box-shadow:-80vw 40vh 0 #2dffc4,-35vw 72vh 0 #ffd23f,-62vw 12vh 0 #4da3ff,-8vw 86vh 0 #ff4fd8,-90vw 80vh 0 #ffd23f;animation:bob 6s ease-in-out infinite alternate}
+@keyframes bob{to{transform:translateY(26px) rotate(12deg)}}
+[data-theme=arcade] h1,[data-theme=arcade] h2,[data-theme=arcade] h3{font-family:'Space Mono',monospace;font-weight:700;text-transform:uppercase;letter-spacing:0}
+[data-theme=arcade] h1{color:var(--cy);text-shadow:0 0 22px rgba(255,79,216,.55),3px 3px 0 #ff4fd8}
+[data-theme=arcade] .g{background:rgba(32,8,58,.88);border:2px solid #ff4fd8;border-radius:0;backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:0 0 18px rgba(255,79,216,.35),inset 0 0 0 4px #1a0630,inset 0 0 0 5px rgba(255,79,216,.45)}
+[data-theme=arcade] .g::before{display:none}
+[data-theme=arcade] .btn{border-radius:0;border:2px solid #ff4fd8;background:transparent;box-shadow:none;backdrop-filter:none;font-family:'Space Mono',monospace;text-transform:uppercase;letter-spacing:.04em}
+[data-theme=arcade] .btn.p{background:#2dffc4;border:0;color:#06130f;box-shadow:0 5px 0 #0b8f6e,0 0 22px rgba(45,255,196,.45)}
+[data-theme=arcade] .btn.p:active{transform:translateY(3px);box-shadow:0 2px 0 #0b8f6e}
+[data-theme=arcade] .btn.d{border-color:var(--er)}
+[data-theme=arcade] .badge{border-radius:0;border-width:2px;text-transform:uppercase;font-size:11px;background:rgba(0,0,0,.25)}
+[data-theme=arcade] .logo{font-family:'Space Mono',monospace;text-transform:uppercase}
+[data-theme=arcade] .logo i{border-radius:0;border:3px solid #ff4fd8;box-shadow:4px 4px 0 #2dffc4}
+[data-theme=arcade] input,[data-theme=arcade] select{border-radius:0;border:2px solid #ff4fd8;background:#12031f;font-family:'Space Mono',monospace}
+[data-theme=arcade] .bar{border-radius:0;border:1px solid #ff4fd8;background:#12031f}
+[data-theme=arcade] .bar>div{background:repeating-linear-gradient(90deg,#2dffc4 0 8px,#17c598 8px 10px)}
+[data-theme=arcade] .tick{border-radius:0;box-shadow:0 0 22px rgba(141,255,107,.5)}
+[data-theme=arcade] .mc.on{outline:3px solid var(--cy);outline-offset:3px}
+[data-theme=arcade] details{border:2px solid #ff4fd8;padding:8px 12px;margin:8px 0}
+[data-theme=arcade] .slot.x{border-style:dashed}
+[data-theme=arcade] body::after{display:block;position:fixed;inset:0;width:auto;height:auto;border-radius:0;filter:none;opacity:.35;animation:none;z-index:50;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,.25) 0 1px,transparent 1px 3px)}
+.tag{display:inline-block;border:2px solid var(--cy);color:var(--cy);padding:5px 14px;font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+.lbl{display:inline-block;background:#fff;color:#000;font-weight:700;text-transform:uppercase;padding:10px 18px;box-shadow:5px 5px 0 #ff4fd8;transform:rotate(-1deg)}
+.sh{text-align:center;text-transform:uppercase}
+.ic{font-size:30px;color:var(--cy);line-height:1;margin-bottom:6px}.g:nth-child(2) .ic{color:#ff4fd8}.g:nth-child(3) .ic{color:var(--wa)}
+.pk{color:var(--cy);font-weight:700;font-size:1.25rem;text-transform:uppercase;margin-top:4px}
+.tile{padding:14px;color:#000;display:flex;flex-direction:column;gap:6px;min-height:92px;box-shadow:4px 4px 0 rgba(0,0,0,.4);border:2px solid #000}
+.tile small{font-size:11px;text-transform:uppercase}
+.chip{align-self:flex-start;background:#000;color:#fff;font-size:11px;padding:2px 8px;text-transform:uppercase;font-weight:700}.g .chip{color:#000}
+.fq{margin:10px 0;border:2px solid #ff4fd8;background:rgba(32,8,58,.88);padding:0}
+.fq summary{list-style:none;cursor:pointer;padding:14px;font-weight:700;display:flex;justify-content:space-between;gap:10px;color:var(--tx)}
+.fq summary::after{content:"⌄";color:var(--cy)}.fq[open]{border-color:var(--cy);box-shadow:0 0 18px rgba(45,255,196,.4)}.fq p{margin:0;padding:0 14px 14px;color:var(--tx)}
+.hl{text-decoration:none;text-transform:uppercase;font-size:13px;color:var(--mu)}.fh{margin:22px 0 4px;text-transform:uppercase;font-size:14px}
+footer a{color:var(--mu);text-decoration:none}
+</style></head><body><div id="app"></div>
+<script>
+const CFG={slotMinutes:60,openHour:8,closeHour:20,maxAdvanceDays:3,cancelCutoffMin:60,maxActive:2};
+const KEY="";
+const ST=["confirmed","ready","washing","completed"];
+const LBL={confirmed:"Booking confirmed",ready:"Ready for laundry",washing:"Washing",completed:"Completed",cancelled:"Cancelled"};
+const iso=d=>d.toISOString().slice(0,10);const today=()=>iso(new Date());
+const addD=n=>{const d=new Date();d.setDate(d.getDate()+n);return iso(d)};
+const hh=h=>{const a=h>=12?"PM":"AM";return String(h%12||12).padStart(2,"0")+":00 "+a};
+const startMs=(d,h)=>new Date(d+"T"+String(h).padStart(2,"0")+":00:00").getTime();
+function seed(){const m=[];let n=1;[["r1","Block A Laundry",["Front-load","Front-load","Top-load"]],["r2","Block B Laundry",["Front-load","Top-load","Top-load"]]].forEach(r=>r[2].forEach(t=>{m.push({id:"m"+n,room:r[0],no:"WM-"+String(n).padStart(2,"0"),type:t,kg:t=="Top-load"?7:8,maint:n==5});n++}));
+return{rooms:[{id:"r1",name:"Block A Laundry"},{id:"r2",name:"Block B Laundry"}],machines:m,
+bookings:[{id:"b0",ref:"LX-DEMO01",uid:"s1",name:"Aarav Sharma",mid:"m2",date:today(),hour:Math.min(19,new Date().getHours()+3),status:"confirmed",created:Date.now(),hist:{confirmed:Date.now()}},
+{id:"b00",ref:"LX-DEMO00",uid:"s1",name:"Aarav Sharma",mid:"m1",date:addD(-2),hour:10,status:"completed",created:Date.now()-2e8,hist:{confirmed:Date.now()-2e8}},
+{id:"b01",ref:"LX-DEMO02",uid:"s2",name:"Meera Iyer",mid:"m3",date:today(),hour:Math.min(19,new Date().getHours()+1),status:"confirmed",created:Date.now(),hist:{confirmed:Date.now()}}],
+notes:[{id:"n0",uid:"s1",text:"Welcome to LAUNDRYX demo mode.",at:Date.now(),read:false}],
+maint:[{id:"x1",mid:"m5",desc:"Drum belt replacement",reported:today(),resolved:null}]}}
+let DB;try{DB=JSON.parse(localStorage.getItem(KEY))}catch(e){}if(!DB)DB=seed();
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(DB))}catch(e){}};
+let S={view:"landing",user:null,tab:"overview",bk:{room:"r1",mid:null,date:today(),hour:null},done:null,filter:"all",toast:null};
+const $=(h)=>h;const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const active=b=>b.status!="cancelled"&&b.status!="completed";
+const M=id=>DB.machines.find(m=>m.id==id);const R=id=>DB.rooms.find(r=>r.id==id).name;
+function mState(m){if(m.maint)return"maintenance";const t=Date.now();const b=DB.bookings.find(b=>b.mid==m.id&&active(b));
+if(DB.bookings.some(b=>b.mid==m.id&&b.status=="washing"))return"inuse";
+if(DB.bookings.some(b=>b.mid==m.id&&active(b)&&b.date==today()&&startMs(b.date,b.hour)<=t&&t<startMs(b.date,b.hour)+36e5))return"reserved";return"available"}
+function toast(t,err){S.toast={t,err};render();setTimeout(()=>{S.toast=null;render()},2600)}
+function note(uid,text){DB.notes.unshift({id:"n"+Date.now()+Math.random(),uid,text,at:Date.now(),read:false})}
+// atomic booking: validation + overlap check in a single synchronous function (mirrors the SQL function in a live backend)
+function book(uid,name,mid,date,hour){const m=M(mid);if(!m||m.maint)return"Machine is not bookable.";
+if(startMs(date,hour)<Date.now())return"That slot has already passed.";
+if(date>addD(CFG.maxAdvanceDays))return"Date is outside the booking window.";
+if(DB.bookings.some(b=>b.mid==mid&&b.date==date&&b.hour==hour&&b.status!="cancelled"))return"Slot was just taken. Pick another.";
+if(DB.bookings.some(b=>b.uid==uid&&b.date==date&&b.hour==hour&&b.status!="cancelled"))return"You already have a booking at this time.";
+if(DB.bookings.filter(b=>b.uid==uid&&active(b)).length>=CFG.maxActive)return"Limit of "+CFG.maxActive+" active bookings reached.";
+const ref="LX-"+Math.random().toString(36).slice(2,8).toUpperCase();
+const b={id:"b"+Date.now(),ref,uid,name,mid,date,hour,status:"confirmed",created:Date.now(),hist:{confirmed:Date.now()}};
+DB.bookings.push(b);note(uid,"Booking "+ref+" confirmed for "+m.no+" at "+hh(hour)+".");save();return b}
+const canCancel=b=>b.status=="confirmed"&&startMs(b.date,b.hour)-Date.now()>=CFG.cancelCutoffMin*6e4;
+function cancel(b,by){if(by=="s"&&!canCancel(b))return false;b.status="cancelled";note(b.uid,"Booking "+b.ref+" was cancelled"+(by=="a"?" by an administrator.":"."));save();return true}
+function advance(b){const i=ST.indexOf(b.status);if(i<0||i>=3)return;b.status=ST[i+1];b.hist[b.status]=Date.now();note(b.uid,"Booking "+b.ref+": "+LBL[b.status]+".");save()}
+const badge=s=>`<span class="badge ${s}">${LBL[s]||({available:"Available",reserved:"Reserved",inuse:"In use",maintenance:"Maintenance"}[s])}</span>`;
+function confirmD(msg,fn){window._cf=fn;S.dlg=msg;render()}
+const ME=()=>DB.bookings.filter(b=>b.uid==S.user.id);
+function logo(){return`<div class="logo"><i></i>LAUNDRYX</div>`}
+function landing(){const col=["#2dffc4","#4da3ff","#ff4fd8","#ffd23f","#2dffc4"];
+const steps=["Sign in","Select a machine","Choose a time","Confirm the booking","Track your laundry"];
+const days=[["Today","open"],[addD(1),"ahead"],[addD(2),"ahead"]];
+const faq=[["Who can join?","Any hostel student. Register with your student email and ID."],["Is it free?","Yes. Booking a laundry slot costs nothing in this project."],["When are the slots?","Every day, hourly, from "+hh(CFG.openHour)+" to "+hh(CFG.closeHour)+"."],["Can I cancel?","Yes, up to "+CFG.cancelCutoffMin+" minutes before your slot starts."],["Do machines detect when a wash ends?","No. Staff update the progress, and time-based progress is only an estimate."],["Is this live data?","Demo mode uses simulated data saved in your browser only. Live mode uses the Supabase database."]];
+return`<div class="wrap"><div class="row sp" style="margin-bottom:8px">${logo()}<div class="row"><a class="hl" href="#features">Perks</a><a class="hl" href="#how">Timeline</a><a class="hl" href="#faq">FAQ</a><button class="btn p s" onclick="go('login')">Sign in</button></div></div>
+<section style="text-align:center;padding:48px 0 24px"><span class="tag">◉ Slots open today</span><h1 style="margin:22px 0">Your laundry.<br>Your schedule.</h1><div class="lbl">Laundry, without the wait.</div>
+<p style="max-width:540px;margin:22px auto;color:var(--tx)">A hostel laundry system to <b style="color:var(--cy)">BOOK</b> a machine, <b style="color:#ff4fd8">TRACK</b> your wash and <b style="color:var(--wa)">SKIP</b> the waiting line.</p>
+<div class="row" style="justify-content:center;flex-direction:column;align-items:center;gap:14px"><button class="btn p" style="min-width:230px" onclick="go('login')">Book a slot</button><a class="btn" style="min-width:230px;text-decoration:none" href="#how">See how it works</a></div><p style="margin-top:28px;font-size:12px">▾ scroll ▾</p></section>
+<section id="features"><h2 class="sh">What is it?</h2><div class="grid" style="margin-top:16px">${[["✦","Book","Pick a room, machine and hourly slot. Double bookings are rejected."],["⚒","Track","Follow every stage from confirmed to completed."],["♛","Manage","Admins control machines, bookings and maintenance."]].map(c=>`<div class="g"><div class="ic">${c[0]}</div><h3>${c[1]}</h3><p>${c[2]}</p></div>`).join("")}</div>
+<h2 class="sh" style="margin-top:44px">Perks</h2><div class="grid" style="margin-top:16px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">${[["Never double-booked","Smart slot booking"],["Live machine status","Real-time availability"],["Stage by stage","Laundry progress tracking"],["Every change","In-app notifications"],["For wardens","Admin management"]].map(c=>`<div class="g"><small style="color:var(--mu);text-transform:uppercase">${c[0]}</small><div class="pk">${c[1]}</div></div>`).join("")}</div></section>
+<section id="how" style="padding-top:44px"><h2 class="sh" style="color:var(--cy);text-shadow:0 0 18px rgba(45,255,196,.5)">How it works</h2><div class="grid" style="margin-top:16px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))">${steps.map((s,i)=>`<div class="tile" style="background:${col[i%4]}"><span class="chip">Step ${i+1}</span><b>${s}</b>${i==0?"<small>● start here</small>":""}</div>`).join("")}</div>
+<div class="g" style="margin-top:16px"><div class="row"><span class="ic">▣</span><div><b>OPEN EVERY DAY</b><p style="margin:0">${hh(CFG.openHour)} – ${hh(CFG.closeHour)} · hourly slots</p></div></div><div class="row" style="margin-top:14px"><span class="ic">◷</span><div><b>CANCEL FREE</b><p style="margin:0">Up to ${CFG.cancelCutoffMin} min before start</p></div></div></div></section>
+<section style="padding-top:44px"><h2 class="sh"><span style="color:var(--cy)">Book</span> now</h2><p style="text-align:center">Free for hostel students. Pick any open day below.</p><div style="margin-top:16px;display:grid;gap:14px">${days.map((d,i)=>i==0?`<div class="g"><span class="chip" style="background:#2dffc4">Today</span><h2 style="margin:10px 0">Laundry slots</h2><button class="btn p" onclick="go('login')">Book a slot →</button></div>`:`<div class="g" style="border-style:dashed;box-shadow:none;opacity:.8"><span class="chip" style="background:${col[i+1]}">${d[0]}</span><h3 style="margin:10px 0">Book ahead</h3><p>🔒 Sign in to reserve</p></div>`).join("")}</div></section>
+<section id="faq" style="padding-top:44px"><h2 class="sh">FAQ</h2><div style="margin-top:16px">${faq.map(f=>`<details class="fq"><summary>${f[0]}</summary><p>${f[1]}</p></details>`).join("")}</div></section>
+<footer style="padding:50px 0 20px;border-top:1px solid var(--bd);margin-top:50px">${logo()}<p style="text-transform:uppercase">Laundry, without the wait.</p><h4 class="fh" style="color:var(--cy)">Quick links</h4><p><a href="#features">Perks</a><br><a href="#how">Timeline</a><br><a href="#faq">FAQ</a><br><a href="#" style="color:var(--cy)" onclick="go('login');return false">BOOK NOW →</a></p><h4 class="fh" style="color:#ff4fd8">Queries &amp; connect</h4><p>Questions? Ask your hostel warden.</p><button class="btn p" onclick="go('login')">Sign in</button> <button class="btn" onclick="toggleTheme()">Switch theme</button></footer></div>`}
+function login(){return`<div class="wrap" style="max-width:460px;padding-top:8vh"><div class="g"><div style="margin-bottom:14px">${logo()}</div><h2>Sign in (demo mode)</h2><p class="demo">Demo accounts only. No real authentication or database is used in this build.</p>
+<div class="row" style="margin-top:14px;flex-direction:column;align-items:stretch"><button class="btn p" onclick="signin('s')">Continue as demo student</button><button class="btn" onclick="signin('a')">Continue as demo administrator</button><button class="btn" onclick="go('landing')">Back</button><button class="btn s d" onclick="resetDemo()">Reset demo data</button></div></div></div>`}
+function signin(r){S.user=r=="s"?{id:"s1",name:"Aarav Sharma",role:"s",sid:"BT22CSE041",hostel:"Block A",room:"214"}:{id:"a1",name:"Hostel Warden",role:"a"};S.view="app";S.tab="overview";render()}
+function resetDemo(){DB=seed();save();toast("Demo data reset.")}
+function go(v){S.view=v;render()}
+function toggleTheme(){const r=document.documentElement;const o=["arcade","light","dark"];r.dataset.theme=o[(o.indexOf(r.dataset.theme)+1)%3]}
+const TABS_S=[["overview","Overview"],["book","Book a slot"],["mine","My bookings"],["track","Tracking"],["avail","Machines"],["notes","Notifications"],["profile","Profile"]];
+const TABS_A=[["overview","Overview"],["bookings","Bookings"],["machines","Machines"],["maint","Maintenance"],["reports","Reports"]];
+function shell(body){const A=S.user.role=="a";const tabs=A?TABS_A:TABS_S;const un=DB.notes.filter(n=>n.uid==S.user.id&&!n.read).length;
+return`<div class="wrap"><div class="row sp" style="margin-bottom:14px">${logo()}<div class="row"><span class="demo">Demo mode · simulated data</span><button class="btn s" onclick="toggleTheme()">Theme</button><button class="btn s" onclick="confirmD('Sign out of LAUNDRYX?',()=>{S.user=null;go('landing')})">Sign out</button></div></div>
+<nav class="top g">${tabs.map(t=>`<button class="btn s ${S.tab==t[0]?"on":""}" onclick="S.tab='${t[0]}';render()">${t[1]}${t[0]=="notes"&&un?" ("+un+")":""}</button>`).join("")}</nav>${body}</div>`}
+const fmt=b=>`${new Date(b.date+"T00:00").toLocaleDateString(undefined,{weekday:"short",day:"numeric",month:"short"})}, ${hh(b.hour)} – ${hh(b.hour+1)}`;
+function bcard(b,adm){const m=M(b.mid);return`<div class="g"><div class="row sp"><h3>${m.no} · ${R(m.room)}</h3>${badge(b.status)}</div><p>${fmt(b)}${adm?" · "+esc(b.name):""}</p><p>Ref ${b.ref}</p><div class="row">
+<button class="btn s" onclick="detail('${b.id}')">View details</button>
+${adm?(["confirmed","ready","washing"].includes(b.status)?`<button class="btn s p" onclick="advance(DB.bookings.find(x=>x.id=='${b.id}'));render()">Mark: ${LBL[ST[ST.indexOf(b.status)+1]]}</button>`:"")+(active(b)?`<button class="btn s d" onclick="confirmD('Cancel ${b.ref} as admin?',()=>{cancel(DB.bookings.find(x=>x.id=='${b.id}'),'a');toast('Booking cancelled.')})">Cancel</button>`:""):
+(b.status=="confirmed"?`<button class="btn s d" ${canCancel(b)?"":"disabled title='Cancellation closed'"} onclick="confirmD('Cancel booking ${b.ref}?',()=>{cancel(DB.bookings.find(x=>x.id=='${b.id}'),'s')&&toast('Booking cancelled.')})">Cancel booking</button>${canCancel(b)?"":`<span class="demo">Cutoff passed</span>`}`:"")}</div></div>`}
+function detail(id){S.det=id;render()}
+function sOverview(){const mine=ME();const up=mine.filter(b=>b.status=="confirmed"&&startMs(b.date,b.hour)>Date.now()-36e5).sort((a,b)=>startMs(a.date,a.hour)-startMs(b.date,b.hour))[0];
+const av=DB.machines.filter(m=>mState(m)=="available").length;
+return`<h2>Hello, ${S.user.name.split(" ")[0]}</h2><p>${new Date().toLocaleDateString(undefined,{dateStyle:"full"})}</p><div class="grid" style="margin:14px 0"><div class="g stat"><b>${av}</b><span>available machines</span></div><div class="g stat"><b>${mine.filter(b=>b.status=="completed").length}</b><span>completed washes</span></div><div class="g stat"><b>${mine.length}</b><span>total bookings</span></div></div>
+<h3 style="margin-bottom:10px">Upcoming booking</h3>${up?bcard(up):`<div class="g"><h3>No booking yet</h3><p>Reserve a machine and it will appear here.</p><button class="btn p" onclick="S.tab='book';render()">Book a slot</button></div>`}
+<h3 style="margin:18px 0 10px">Recent activity</h3><div class="g">${DB.notes.filter(n=>n.uid==S.user.id).slice(0,4).map(n=>`<p>${esc(n.text)}</p>`).join("")||"<p>Nothing yet.</p>"}</div>`}
+function sBook(){const k=S.bk;const ms=DB.machines.filter(m=>m.room==k.room);
+if(S.done){const b=S.done;return`<div class="g" style="text-align:center"><div class="tick">✓</div><h2 style="margin-top:12px">Booking confirmed</h2><p>${M(b.mid).no} · ${fmt(b)}</p><p>Reference <b>${b.ref}</b></p><div class="row" style="justify-content:center"><button class="btn p" onclick="S.done=null;S.tab='mine';render()">View my bookings</button><button class="btn" onclick="S.done=null;render()">Book another</button></div></div>`}
+const taken=h=>DB.bookings.some(b=>b.mid==k.mid&&b.date==k.date&&b.hour==h&&b.status!="cancelled");
+const slots=[];for(let h=CFG.openHour;h<CFG.closeHour;h++)slots.push(h);
+return`<h2>Book a slot</h2><label for="rm">Laundry room</label><select id="rm" onchange="S.bk={room:this.value,mid:null,date:S.bk.date,hour:null};render()">${DB.rooms.map(r=>`<option value="${r.id}" ${r.id==k.room?"selected":""}>${r.name}</option>`).join("")}</select>
+<label>Machine</label><div class="grid">${ms.map(m=>{const s=mState(m);return`<div class="g mc ${k.mid==m.id?"on":""}" tabindex="0" role="button" onkeydown="if(event.key=='Enter')this.click()" onclick="${m.maint?"toast('Machine is under maintenance.',1)":`S.bk.mid='${m.id}';S.bk.hour=null;render()`}"><div class="row sp"><h3>${m.no}</h3>${badge(s)}</div><p>${m.type} · ${m.kg} kg</p></div>`}).join("")}</div>
+<label for="dt">Date (next ${CFG.maxAdvanceDays} days)</label><input id="dt" type="date" min="${today()}" max="${addD(CFG.maxAdvanceDays)}" value="${k.date}" onchange="S.bk.date=this.value||today();S.bk.hour=null;render()">
+${k.mid?`<label>Time slot</label><div class="slots">${slots.map(h=>{const past=startMs(k.date,h)<Date.now();const t=taken(h);const x=past||t;return`<button class="btn slot ${k.hour===h?"on":""} ${x?"x":""}" ${x?"disabled":""} onclick="S.bk.hour=${h};render()">${hh(h)} – ${hh(h+1)}<br><small>${past?"Expired":t?"Booked":"Available"}</small></button>`}).join("")}</div>`:`<p>Select a machine to see time slots.</p>`}
+${k.mid&&k.hour!==null?`<div class="g" style="margin-top:16px"><h3>Summary</h3><p>${S.user.name} · ${R(k.room)} · ${M(k.mid).no}</p><p>${k.date} · ${hh(k.hour)} – ${hh(k.hour+1)} (${CFG.slotMinutes} min)</p><button id="cb" class="btn p" onclick="doBook(this)">Confirm booking</button></div>`:""}`}
+function doBook(btn){btn.disabled=true;const k=S.bk;const r=book(S.user.id,S.user.name,k.mid,k.date,k.hour);if(typeof r=="string"){toast(r,1);return}S.done=r;S.bk.hour=null;render()}
+function sMine(){const q=S.q||"";let l=ME().filter(b=>(S.filter=="all"||b.status==S.filter||(S.filter=="active"&&active(b)))&&b.ref.toLowerCase().includes(q.toLowerCase())).sort((a,b)=>startMs(b.date,b.hour)-startMs(a.date,a.hour));
+return`<h2>My bookings</h2><div class="row" style="margin:12px 0"><input id="q" placeholder="Search reference" value="${esc(q)}" oninput="S.q=this.value;render();document.getElementById('q').focus()" aria-label="Search by reference"><select onchange="S.filter=this.value;render()" aria-label="Status filter">${["all","active","confirmed","completed","cancelled"].map(s=>`<option ${S.filter==s?"selected":""}>${s}</option>`).join("")}</select><button class="btn s" onclick="S.q='';S.filter='all';render()">Reset</button></div>
+<div class="grid">${l.map(b=>bcard(b)).join("")||`<div class="g"><h3>No bookings found</h3><p>Try resetting filters or book a slot.</p></div>`}</div>`}
+function tl(b){return`<div class="tl">${ST.map(s=>`<div class="${b.hist[s]?"d":""}">${LBL[s]}<br><small>${b.hist[s]?new Date(b.hist[s]).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"}):"–"}</small></div>`).join("")}</div>`}
+function sTrack(){const l=ME().filter(active);return`<h2>Laundry tracking</h2><p>Progress is updated by staff. Time-based progress is an estimate, not machine telemetry.</p><div class="grid" style="margin-top:12px">${l.map(b=>{const w=b.status=="washing"?Math.min(95,Math.round((Date.now()-b.hist.washing)/(45*6e4)*100)):0;return`<div class="g"><h3>${M(b.mid).no} · ${b.ref}</h3><p>${b.status=="washing"?"Active laundry session":"Scheduled booking"} · ${fmt(b)}</p>${tl(b)}${b.status=="washing"?`<div class="bar"><div style="width:${w}%"></div></div><p class="demo">Estimated progress ${w}%</p>`:""}</div>`}).join("")||`<div class="g"><h3>Nothing to track</h3><p>Active and scheduled bookings show up here.</p></div>`}</div>`}
+function sAvail(){const f=S.rf||"all";const l=DB.machines.filter(m=>f=="all"||mState(m)==f);const c=s=>DB.machines.filter(m=>mState(m)==s).length;
+return`<h2>Machine availability</h2><div class="grid" style="margin:12px 0">${["available","reserved","inuse","maintenance"].map(s=>`<div class="g stat"><b>${c(s)}</b><span>${s}</span></div>`).join("")}</div><div class="row"><select onchange="S.rf=this.value;render()" aria-label="Filter status">${["all","available","reserved","inuse","maintenance"].map(s=>`<option ${f==s?"selected":""}>${s}</option>`).join("")}</select></div>
+<div class="g tw" style="margin-top:12px"><table><tr><th>Machine</th><th>Room</th><th>Type</th><th>kg</th><th>Status</th><th>Taken hours today</th></tr>${l.map(m=>`<tr><td>${m.no}</td><td>${R(m.room)}</td><td>${m.type}</td><td>${m.kg}</td><td>${badge(mState(m))}</td><td>${DB.bookings.filter(b=>b.mid==m.id&&b.date==today()&&b.status!="cancelled").map(b=>hh(b.hour)).join(", ")||"–"}</td></tr>`).join("")}</table></div>`}
+function sNotes(){const l=DB.notes.filter(n=>n.uid==S.user.id);return`<div class="row sp"><h2>Notifications</h2><button class="btn s" onclick="l_read()">Mark all as read</button></div><div class="grid" style="margin-top:12px;grid-template-columns:1fr">${l.map(n=>`<div class="g" style="${n.read?"opacity:.6":""}"><p style="color:var(--tx)">${esc(n.text)}</p><small class="demo">${new Date(n.at).toLocaleString()}</small> ${n.read?"":`<button class="btn s" onclick="DB.notes.find(x=>x.id=='${n.id}').read=true;save();render()">Mark as read</button>`}</div>`).join("")||`<div class="g"><h3>All caught up</h3></div>`}</div>`}
+function l_read(){DB.notes.forEach(n=>{if(n.uid==S.user.id)n.read=true});save();render()}
+function sProfile(){const u=S.user,m=ME();return`<h2>Profile</h2><div class="g" style="margin-top:12px"><p>Name: <b style="color:var(--tx)">${u.name}</b></p><p>Student ID: ${u.sid} (locked)</p><p>Hostel: ${u.hostel}, room ${u.room}</p><p>Bookings: ${m.length} total · ${m.filter(b=>b.status=="cancelled").length} cancelled</p><p class="demo">Demo profile. Identity and role fields are read-only.</p></div>`}
+// admin
+function aOverview(){const d=DB.bookings;const c=s=>DB.machines.filter(m=>mState(m)==s).length;const done=d.filter(b=>b.status=="completed").length,canc=d.filter(b=>b.status=="cancelled").length;
+const peak={};d.filter(b=>b.status!="cancelled").forEach(b=>peak[b.hour]=(peak[b.hour]||0)+1);const mx=Math.max(1,...Object.values(peak));
+return`<h2>Operations overview</h2><div class="grid" style="margin:12px 0">${[["Machines",DB.machines.length],["Active bookings",d.filter(active).length],["Today",d.filter(b=>b.date==today()&&b.status!="cancelled").length],["Available",c("available")],["In use",c("inuse")],["Under maintenance",c("maintenance")],["Completion rate",d.length?Math.round(done/(d.length-canc||1)*100)+"%":"–"]].map(s=>`<div class="g stat"><b>${s[1]}</b><span>${s[0]}</span></div>`).join("")}</div>
+<div class="g"><h3>Peak-hour distribution</h3>${Object.keys(peak).sort((a,b)=>a-b).map(h=>`<div class="row" style="margin:6px 0"><span style="width:80px">${hh(+h)}</span><div class="bar" style="flex:1"><div style="width:${peak[h]/mx*100}%"></div></div><b>${peak[h]}</b></div>`).join("")||"<p>No data.</p>"}</div>`}
+function aBookings(){const q=(S.q||"").toLowerCase();const l=DB.bookings.filter(b=>(S.filter=="all"||b.status==S.filter)&&(b.ref+b.name).toLowerCase().includes(q)).sort((a,b)=>startMs(b.date,b.hour)-startMs(a.date,a.hour));
+return`<h2>Bookings</h2><div class="row" style="margin:12px 0"><input id="q" placeholder="Search reference or student" value="${esc(S.q||"")}" oninput="S.q=this.value;render();document.getElementById('q').focus()" aria-label="Search bookings"><select onchange="S.filter=this.value;render()" aria-label="Status">${["all",...ST,"cancelled"].map(s=>`<option ${S.filter==s?"selected":""}>${s}</option>`).join("")}</select><button class="btn s" onclick="S.q='';S.filter='all';render()">Reset</button></div><div class="grid">${l.map(b=>bcard(b,1)).join("")||`<div class="g"><h3>No matching bookings</h3></div>`}</div>`}
+function aMachines(){return`<h2>Machines</h2><div class="g tw" style="margin-top:12px"><table><tr><th>Machine</th><th>Room</th><th>Type</th><th>Status</th><th>Action</th></tr>${DB.machines.map(m=>`<tr><td>${m.no}</td><td>${R(m.room)}</td><td>${m.type} · ${m.kg} kg</td><td>${badge(mState(m))}</td><td><button class="btn s" onclick="toggleMaint('${m.id}')">${m.maint?"Restore to service":"Mark maintenance"}</button></td></tr>`).join("")}</table></div>
+<div class="g" style="margin-top:14px"><h3>Add machine</h3><div class="row"><select id="nr">${DB.rooms.map(r=>`<option value="${r.id}">${r.name}</option>`).join("")}</select><select id="nt"><option>Front-load</option><option>Top-load</option></select><input id="nk" type="number" min="3" max="20" value="8" aria-label="Capacity kg"><button class="btn p" onclick="addM()">Add</button></div></div>`}
+function addM(){const kg=+document.getElementById("nk").value;if(!(kg>=3&&kg<=20))return toast("Capacity must be 3–20 kg.",1);const n=DB.machines.length+1;DB.machines.push({id:"m"+Date.now(),room:nr.value,no:"WM-"+String(n).padStart(2,"0"),type:nt.value,kg,maint:false});save();toast("Machine added.")}
+function toggleMaint(id){const m=M(id);if(!m.maint){const d=prompt?"Reported via admin dashboard":"";m.maint=true;DB.maint.push({id:"x"+Date.now(),mid:id,desc:d,reported:today(),resolved:null});
+DB.bookings.filter(b=>b.mid==id&&b.status=="confirmed"&&b.date>=today()).forEach(b=>{cancel(b,"a")})}else{m.maint=false;DB.maint.filter(x=>x.mid==id&&!x.resolved).forEach(x=>x.resolved=today())}save();toast(m.maint?"Marked under maintenance. Future bookings cancelled and students notified.":"Machine restored.")}
+function aMaint(){return`<h2>Maintenance history</h2><div class="g tw" style="margin-top:12px"><table><tr><th>Machine</th><th>Description</th><th>Reported</th><th>Resolved</th></tr>${DB.maint.map(x=>`<tr><td>${M(x.mid).no}</td><td>${esc(x.desc)}</td><td>${x.reported}</td><td>${x.resolved||"Open"}</td></tr>`).join("")}</table></div>`}
+function aReports(){const d=DB.bookings;const by={};d.forEach(b=>by[b.status]=(by[b.status]||0)+1);const mu={};d.filter(b=>b.status!="cancelled").forEach(b=>mu[M(b.mid).no]=(mu[M(b.mid).no]||0)+1);
+return`<div class="row sp"><h2>Reports</h2><button class="btn p" onclick="csv()">Export bookings CSV</button></div><div class="grid" style="margin-top:12px"><div class="g"><h3>Status breakdown</h3>${Object.keys(by).map(s=>`<p>${badge(s)} ${by[s]}</p>`).join("")}</div><div class="g"><h3>Machine utilization (bookings)</h3>${Object.keys(mu).map(k=>`<p>${k}: ${mu[k]}</p>`).join("")||"<p>No data.</p>"}</div></div>`}
+function csv(){const rows=[["ref","student","machine","date","hour","status"],...DB.bookings.map(b=>[b.ref,b.name,M(b.mid).no,b.date,hh(b.hour),b.status])];const u=URL.createObjectURL(new Blob([rows.map(r=>r.join(",")).join("\n")],{type:"text/csv"}));const a=document.createElement("a");a.href=u;a.download="laundryx-bookings.csv";a.click();toast("CSV export started. (Downloads may be blocked inside the preview.)")}
+function render(){let h;
+if(S.view=="landing")h=landing();else if(S.view=="login")h=login();else{const A=S.user.role=="a";const T={overview:A?aOverview:sOverview,book:sBook,mine:sMine,track:sTrack,avail:sAvail,notes:sNotes,profile:sProfile,bookings:aBookings,machines:aMachines,maint:aMaint,reports:aReports};h=shell((T[S.tab]||sOverview)())}
+const b=S.det&&DB.bookings.find(x=>x.id==S.det);
+if(b)h+=`<div class="ov" onclick="S.det=null;render()"><div class="g" style="background:var(--bg2);max-width:440px;width:100%" onclick="event.stopPropagation()" role="dialog" aria-label="Booking details"><h3>${b.ref}</h3><p>${M(b.mid).no} · ${R(M(b.mid).room)}</p><p>${fmt(b)} · ${CFG.slotMinutes} min</p><p>${esc(b.name)}</p>${badge(b.status)}${b.status!="cancelled"?tl(b):""}<button class="btn" onclick="S.det=null;render()">Close</button></div></div>`;
+if(S.dlg)h+=`<div class="ov"><div class="g" style="background:var(--bg2)" role="alertdialog" aria-label="Confirm"><h3>${S.dlg}</h3><div class="row" style="margin-top:14px"><button class="btn p" onclick="const f=window._cf;S.dlg=null;f();render()">Yes, continue</button><button class="btn" onclick="S.dlg=null;render()">Keep</button></div></div></div>`;
+if(S.toast)h+=`<div class="toast g" role="status" style="${S.toast.err?"border-color:var(--er)":""}">${S.toast.t}</div>`;
+document.getElementById("app").innerHTML=h}
+render();
+</script></body></html>
